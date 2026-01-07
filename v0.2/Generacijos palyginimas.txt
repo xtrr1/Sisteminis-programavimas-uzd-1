@@ -1,0 +1,56 @@
+Generuojamas skaicius: 5
+
+Failo generavimas: 0.006894 s
+Nuskaitymas: 0.009333 s
+Skaidymas+rusiavimas: 0.000018 s
+Irasymas i du failus: 0.000952 s
+Is viso: 0.017198 s
+
+
+Generuojamas skaicius: 10
+
+Failo generavimas: 0.006383 s
+Nuskaitymas: 0.009945 s
+Skaidymas+rusiavimas: 0.000053 s
+Irasymas i du failus: 0.001064 s
+Is viso: 0.017446 s
+
+Maži kiekiai 5 ir 10
+Duomenų kiekis šiame tarpe su tokio greičio generavimu beveik nesvarbu, nes failo atidarymas ir uždarymas, buferių formavimas, laiko matavimo overhead ir galimas disk-cache sudaro didžiają laiko dalį.
+
+
+Generuojamas skaicius: 100
+
+Failo generavimas: 0.008257 s
+Nuskaitymas: 0.012727 s
+Skaidymas+rusiavimas: 0.000613 s
+Irasymas i du failus: 0.002014 s
+Is viso: 0.023613 s
+
+Vidutinis kiekis 100
+Čia jau pradeda jaustis, kad yra daugiau eilučių/baitų rašymui ir skaitymui, bet dar nemažai laiko sudaro fiksuotas overhead.
+
+
+Generuojamas skaicius: 1000
+
+Failo generavimas: 0.021344 s
+Nuskaitymas: 0.035905 s
+Skaidymas+rusiavimas: 0.010441 s
+Irasymas i du failus: 0.008847 s
+Is viso: 0.076538 s
+
+Didesni kiekiai 1000
+Matosi aiškus augimas, nuskaitymas ir failo generavimas auga dėlk didesnio I/O, skaidymas+rūšiavimas tampa reikšmingas, nes atsiranda reali rikiavimo kaina.
+
+
+Generuojamas skaicius: 10000
+
+Failo generavimas: 0.168063 s
+Nuskaitymas: 0.263373 s
+Skaidymas+rusiavimas: 0.164490 s
+Irasymas i du failus: 0.074834 s
+Is viso: 0.670762 s
+
+Didžiausias kiekis 10000
+
+Čia jau aiškiai matosi, kokie procesai daugiausiai naudoja resursų ir dėl didesnio duomenų kiekio laikas didėja.
