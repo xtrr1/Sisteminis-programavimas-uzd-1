@@ -101,14 +101,11 @@ void Student::skaiciuotiGalutini(bool naudotiMediana) {
 }
 
 std::istream& operator>>(std::istream& in, Student& s) {
-    // Tikimasi formato:
-    // Pavarde Vardas ND1 ND2 ... NDk Egz
-    // k nežinomas, egz yra paskutinis skaičius eilutėje.
 
     if (!(in >> s.pavarde_ >> s.vardas_)) return in;
 
     std::string line;
-    std::getline(in >> std::ws, line); // paima likusius skaičius iš tos pačios eilutės
+    std::getline(in >> std::ws, line);
 
     std::stringstream ss(line);
     std::vector<int> vals;
@@ -123,7 +120,6 @@ std::istream& operator>>(std::istream& in, Student& s) {
     const int egz = vals.back();
     vals.pop_back();
 
-    // ND gali būti 0 (tada vid/med = 0)
     for (int v : vals) {
         if (!isValidGrade(v)) throw std::runtime_error("Netinkamas ND pazymys (turi buti 0..10)");
     }

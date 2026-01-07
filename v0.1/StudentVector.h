@@ -7,28 +7,32 @@
 
 class StudentVector {
 private:
-    std::string vardas_;
-    std::string pavarde_;
-    std::vector<int> nd_;   // std::vector konteineris
-    int egz_ = 0;
-    double galutinis_ = 0.0;
+    std::string name_;
+    std::string surname_;
+    std::vector<int> nd_;
+    int exam_ = 0;
+
+    double finalAvg_ = 0.0;
+    double finalMed_ = 0.0;
 
 public:
     StudentVector() = default;
 
-    void setVardasPavarde(const std::string& vardas, const std::string& pavarde);
+
+    void setNameSurname(const std::string& name, const std::string& surname);
     void setNd(const std::vector<int>& nd);
-    void setEgz(int egz);
+    void setExam(int exam);
 
-    double ndVidurkis() const;
-    double ndMediana() const;
-    void skaiciuotiGalutini(bool naudotiMediana);
+    double ndAverage() const;
+    double ndMedian() const;
+    void computeFinals();
 
-    const std::string& vardas() const { return vardas_; }
-    const std::string& pavarde() const { return pavarde_; }
-    int egz() const { return egz_; }
+    const std::string& name() const { return name_; }
+    const std::string& surname() const { return surname_; }
+    int exam() const { return exam_; }
     std::size_t ndCount() const { return nd_.size(); }
-    double galutinis() const { return galutinis_; }
+    double finalAvg() const { return finalAvg_; }
+    double finalMed() const { return finalMed_; }
 
     friend std::istream& operator>>(std::istream& in, StudentVector& s);
     friend std::ostream& operator<<(std::ostream& out, const StudentVector& s);
