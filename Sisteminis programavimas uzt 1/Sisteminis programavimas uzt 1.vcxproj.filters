@@ -24,12 +24,24 @@
     <ClCompile Include="StudentVector.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="StudentDeque.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="StudentList.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Student.h">
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="StudentVector.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="StudentDeque.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="StudentList.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>
