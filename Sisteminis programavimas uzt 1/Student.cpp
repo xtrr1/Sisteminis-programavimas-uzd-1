@@ -1,27 +1,17 @@
-#include "Student.h"
+﻿#include "Student.h"
 
-#include <iostream>
+#include <algorithm>
 #include <iomanip>
+#include <iostream>
+#include <sstream>
 #include <stdexcept>
+#include <vector>
 
 namespace {
     bool isValidGrade(int x) { return x >= 0 && x <= 10; }
 }
 
 Student::Student() = default;
-
-Student::Student(std::size_t ndCount) {
-    setNdCount(ndCount);
-}
-
-Student::Student(const std::string& vardas, const std::string& pavarde,
-    const int* nd, std::size_t ndCount, int egz)
-    : vardas_(vardas), pavarde_(pavarde), egz_(egz) {
-    setNdCount(ndCount);
-    for (std::size_t i = 0; i < ndCount_; ++i) nd_[i] = nd[i];
-    if (!isValidGrade(egz_)) throw std::invalid_argument("Netinkamas egzamino pazymys");
-    skaiciuotiGalutiniIsVidurkio();
-}
 
 void Student::freeNd() {
     delete[] nd_;
@@ -59,7 +49,6 @@ Student& Student::operator=(const Student& other) {
     galutinis_ = other.galutinis_;
     copyNdFrom(other);
 
-
     return *this;
 }
 
@@ -67,10 +56,26 @@ Student::~Student() {
     freeNd();
 }
 
-void Student::setNdCount(std::size_t ndCount) {
+void Student::setVardasPavarde(const std::string& vardas, const std::string& pavarde) {
+    vardas_ = vardas;
+    pavarde_ = pavarde;
+}
+
+void Student::setNd(const int* nd, std::size_t count) {
     freeNd();
-    ndCount_ = ndCount;
-    if (ndCount_ > 0) nd_ = new int[ndCount_];
+    ndCount_ = count;
+    if (ndCount_ == 0) return;
+
+    nd_ = new int[ndCount_];
+    for (std::size_t i = 0; i < ndCount_; ++i) {
+        if (!isValidGrade(nd[i])) throw std::runtime_error("Netinkamas ND pazymys (turi buti 0..10)");
+        nd_[i] = nd[i];
+    }
+}
+
+void Student::setEgz(int egz) {
+    if (!isValidGrade(egz)) throw std::runtime_error("Netinkamas egzamino pazymys (turi buti 0..10)");
+    egz_ = egz;
 }
 
 double Student::ndVidurkis() const {
@@ -80,26 +85,51 @@ double Student::ndVidurkis() const {
     return static_cast<double>(sum) / static_cast<double>(ndCount_);
 }
 
-void Student::skaiciuotiGalutiniIsVidurkio() {
-    galutinis_ = 0.4 * ndVidurkis() + 0.6 * static_cast<double>(egz_);
+double Student::ndMediana() const {
+    if (ndCount_ == 0) return 0.0;
+    std::vector<int> tmp(nd_, nd_ + ndCount_);
+    std::sort(tmp.begin(), tmp.end());
+
+    const std::size_t mid = tmp.size() / 2;
+    if (tmp.size() % 2 == 1) return static_cast<double>(tmp[mid]);
+    return (static_cast<double>(tmp[mid - 1]) + static_cast<double>(tmp[mid])) / 2.0;
+}
+
+void Student::skaiciuotiGalutini(bool naudotiMediana) {
+    const double baze = naudotiMediana ? ndMediana() : ndVidurkis();
+    galutinis_ = 0.4 * baze + 0.6 * static_cast<double>(egz_);
 }
 
 std::istream& operator>>(std::istream& in, Student& s) {
-    in >> s.pavarde_ >> s.vardas_;
 
-    for (std::size_t i = 0; i < s.ndCount_; ++i) {
-        int x;
-        in >> x;
-        if (!in) return in;
-        if (!isValidGrade(x)) throw std::runtime_error("Netinkamas ND pazymys (turi buti 0..10)");
-        s.nd_[i] = x;
+    if (!(in >> s.pavarde_ >> s.vardas_)) return in;
+
+    std::string line;
+    std::getline(in >> std::ws, line);
+
+    std::stringstream ss(line);
+    std::vector<int> vals;
+    int x;
+    while (ss >> x) vals.push_back(x);
+
+    if (vals.empty()) {
+        in.setstate(std::ios::failbit);
+        return in;
     }
 
-    in >> s.egz_;
-    if (!in) return in;
-    if (!isValidGrade(s.egz_)) throw std::runtime_error("Netinkamas egzamino pazymys (turi buti 0..10)");
+    const int egz = vals.back();
+    vals.pop_back();
 
-    s.skaiciuotiGalutiniIsVidurkio();
+    for (int v : vals) {
+        if (!isValidGrade(v)) throw std::runtime_error("Netinkamas ND pazymys (turi buti 0..10)");
+    }
+    if (!isValidGrade(egz)) throw std::runtime_error("Netinkamas egzamino pazymys (turi buti 0..10)");
+
+    if (!vals.empty()) s.setNd(vals.data(), vals.size());
+    else s.setNd(nullptr, 0);
+
+    s.setEgz(egz);
+
     return in;
 }
 
@@ -108,6 +138,6 @@ std::ostream& operator<<(std::ostream& out, const Student& s) {
         << std::setw(20) << s.pavarde_
         << std::setw(15) << s.vardas_
         << std::right << std::fixed << std::setprecision(2)
-        << std::setw(10) << s.galutinis_;
+        << std::setw(12) << s.galutinis_;
     return out;
 }
